@@ -1,74 +1,77 @@
-# hotel-managment-system
+# Hotel Management System (ERP)
 
-A desktop Enterprise Resource Planning (ERP) platform for hotel operations built in Java. The system features separate, state-synchronized dashboards for **Managers, Receptionists, Housekeeping, Spa Staff, Security, and Guests** built on an asynchronous, data-driven architecture.
+A complete desktop Enterprise Resource Planning (ERP) platform for hotel operations built in Java. The system provides state-synchronized dashboards for **Managers, Receptionists, Housekeeping, Spa Staff, Security, and Guests** running on an asynchronous, data-driven architecture.
 
 ---
 
-## UI Theme Engine (Dynamic Light & Dark Modes)
+## Dynamic UI Theme Engine
 
-The UI utilizes a custom programmatic theme manager that updates color vectors across all active view frames dynamically at runtime without requiring application re-instantiation or frame rebuilding.
+The application features a custom, live theme manager that switches between Light and Dark modes instantly across all active windows without needing a restart.
 
-| Dark Theme Workspace | Light Theme Workspace |
+| Dark Theme | Light Theme |
 |---|---|
 | ![Login Dark](assets/loginDark.png) | ![Login Light](assets/loginLight.png) |
 
 ---
 
-## Role-Based Access Control (RBAC) & Workflows
+## Role-Based Dashboards & Workflows
 
-Users log in through a centralized gateway and are dynamically served tailored dashboards depending on their security contract and system role.
+Users log in through a central gateway and are automatically directed to a custom workspace based on their role and access level.
 
 ### 1. Guest Self-Service Portal
-Guests gain access to an integrated suite allowing autonomous reservation handling, financial ledger auditing, and digital amenity keys.
+Guests can manage their own stay, review bills, and handle digital keys autonomously.
 
-* **Dashboard Landing:** Direct tracking of active stays, checkout timelines, and profile data.
+* **Dashboard Home:** Quick view of active stays, checkout times, and profile data.
   ![Guest Welcome Screen](assets/guestWelcome.png)
 
-* **Autonomous Room Booking:** Filterable reservation module parsing room sizes, premium designations, and custom calendar dates.
+* **Room Booking:** A filterable reservation system that searches by room size, premium status, and dates.
   ![Guest Reservation Flow](assets/guestReservation.png)
   ![Reservation Success](assets/reservationSuccess.png)
 
-* **Integrated FinTech & Digital Keys:** A secure wallet application tier enabling bank-to-wallet funds transfers and room card topping-up.
+* **Digital Wallet & Keys:** A secure wallet module to transfer funds and top up digital room keycards.
   ![Wallet Management](assets/wallet.png)
 
 ### 2. Administrative & Corporate Workspace
-Management modules feature global overrides to manage personnel rosters, review employee parameters, and dynamically onboard staff into security hierarchies.
+Management tools offer full control over hotel staff, roster tracking, and secure hiring workflows.
 
-* **Live Roster Audit:** Real-time visibility into employee metrics, active shift classifications, and specific salary indices.
+* **Staff Auditing:** Real-time tracking of employee metrics, active shifts, and salaries.
   ![Employee List Management](assets/employeeList.png)
 
-* **Secure Employee Onboarding:** A system gateway that validates inputs and securely scales the hotel workforce infrastructure.
+* **Employee Onboarding:** A secure gateway to validate inputs and register new staff members into the system.
   ![New Employee Creation](assets/newEmployee.png)
 
 ---
 
-## Deep-Dive Architecture & Design Patterns
+## Architecture & Design Patterns
 
-### The Observer Pattern
-The application engine detaches state modifications from direct visual updates. Interface modules register as `DataObserver` targets. Any backend state variation automatically broadcasts updates to trigger localized graphical re-renders. 
-* **Real-Time System Logger:** Implements an automated audit trail viewer (`HotelLogger`) tracking background tasks, reservation commits, and security events.
+The system emphasizes clean code, separation of concerns, and robust error handling.
 
+### 1. The Observer Pattern
+Decouples core business logic from the user interface. UI modules register as `DataObserver` targets, meaning any backend state change automatically triggers specific graphical updates without a full page refresh.
+* **Live System Logger:** Includes an automated audit tool (`HotelLogger`) that tracks backend tasks, reservation changes, and security events in real-time.
 ![System Logs Viewer](assets/systemLogs.png)
 
-### Transactional State Persistence (Serialization)
-To prevent runtime data decay without deploying an external database engine, the core database layer relies on **Java Object Serialization (`.ser`)**. 
-* Abstracted object graphs tracking users, structural room objects, active queues, and historical bookings are read dynamically upon execution and written atomically following state modifications.
-* Provides transactional boundaries to protect financial states against system-kill interruptions.
+### 2. Transactional Data Persistence (Serialization)
+To keep the app self-contained without requiring an external database setup, the storage layer relies on **Java Object Serialization (`.ser`)**.
+* Object graphs for users, rooms, queues, and bookings are loaded into memory on startup and saved atomically whenever a change occurs.
+* Built with safety boundaries to protect financial and booking states against unexpected application shutdowns.
 
-### The Strategy Pattern
-Room entities leverage the **Strategy Pattern** to separate raw object metrics from pricing logic computations:
-* Decouples raw entities from environmental formulas (e.g., peak seasonal shifts, corporate contract discounts, multi-day long-stay rate scaling).
-* Allows alternative algorithmic rate multipliers to drop into runtime routines seamlessly.
+### 3. The Strategy Pattern
+Rooms use the **Strategy Pattern** to separate room data from pricing algorithms.
+* Decouples the core room object from dynamic pricing rules (like seasonal peaks, corporate discounts, or long-stay rate drops).
+* Allows the system to swap pricing formulas at runtime without altering the underlying room structures.
 
-### Defensive Programming & Validation
-* **Custom Security Rules:** Features a comprehensive input validation framework, including a dedicated `WeakPasswordException` layer to enforce enterprise-grade security protocols during onboarding.
-* **Financial Integrity Invariants:** All accounting routines utilize structural logic guards to prevent data anomalies (e.g., negative financial injection bounds or overdraft conditions).
+### 4. Defensive Programming & Validation
+* **Input Validation:** Enforces strict security protocols, including a custom `WeakPasswordException` layer during user registration.
+* **Financial Integrity:** All accounting processes use structural logic guards to prevent data anomalies like negative deposits or account overdrafts.
 
 ---
 
 ## Getting Started
 
-### 1. Database Initialization (Data Seeding)
-Before initializing the system frame for the first time, run the automated seeding engine to build the serialized data layers:
+### 1. Initialize the Database (Data Seeding)
+Before running the main application for the first time, run the automated seeding tool to generate the initial serialized data files:
+
 ```bash
 javac DataGenerator.java
+java DataGenerator
